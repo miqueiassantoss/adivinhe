@@ -9,10 +9,12 @@ import { Letter } from "./components/Letter"
 import { Input } from "./components/Input"
 import { Button } from "./components/Button"
 import { LettersUsed } from "./components/LettersUsed"
+import type { LettersUsedProps } from "./components/LettersUsed"
 
 export default function App() {
   const [attempts, setAttempt] = useState(0)
   const [letter, setLetter] = useState("")
+  const [lettersUsed, setLettersUsed] = useState<LettersUsedProps[]>([])
   const [challenge, setChallenge] = useState<Challenge | null>(null)
 
 
@@ -29,9 +31,34 @@ export default function App() {
     setLetter("")
   }
 
+  function handleConfirm(){
+    if (!challenge){
+      return
+    }
+
+    if(!letter.trim()){
+      return alert("Digite uma letra.")
+    }
+
+    const value = letter.toUpperCase()
+    const exists = lettersUsed.find((used) => used.value.toLocaleUpperCase() === value)
+
+    if(exists){
+      return alert ("Você já utilizou a letra " + value)
+    }
+
+    setLettersUsed((prevState) => [...prevState, {value, correct: false}])
+    setLetter("")
+
+  }
+
   useEffect( () => {
     startGame()
   }, [])
+
+  if(!challenge){
+    return
+  }
 
   return (
     <div className={styles.container}>
@@ -41,21 +68,21 @@ export default function App() {
         <Tip tip="Linguagem de programação dinâmica" />
 
         <div className={styles.word}>
-          <Letter value="R" />
-          <Letter value="e" />
-          <Letter value="a" />
-          <Letter value="c" />
-          <Letter value="t" />
+          {
+            challenge.word.split("").map(() => (
+              <Letter value="" />
+            ))
+          }
         </div>
 
         <h4>Palpite</h4>
 
         <div className={styles.guess}>
-          <Input autoFocus maxLength={1} placeholder="?" />
-          <Button title="Confirmar" />
+          <Input autoFocus maxLength={1} placeholder="?" value={letter} onChange={(e) => setLetter(e.target.value)}/>
+          <Button title="Confirmar" onClick={handleConfirm}/>
         </div>
 
-        <LettersUsed />
+        <LettersUsed data={lettersUsed}/>
       </main>
     </div>
   )
