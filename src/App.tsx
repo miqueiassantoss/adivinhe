@@ -12,77 +12,124 @@ import { LettersUsed } from "./components/LettersUsed"
 import type { LettersUsedProps } from "./components/LettersUsed"
 
 export default function App() {
-  const [attempts, setAttempt] = useState(0)
+  const [score, setScore] = useState(0)
   const [letter, setLetter] = useState("")
   const [lettersUsed, setLettersUsed] = useState<LettersUsedProps[]>([])
   const [challenge, setChallenge] = useState<Challenge | null>(null)
 
+  const ATTEMPT_MARGIN = 5
+
 
   function handleRestarGame() {
-    confirm("Reiniciar o jogo?")
+    const isConfirmed = window.confirm("Você deseja reiniciar o jogo?")
+    if(isConfirmed){
+      startGame()
+    }
+
   }
 
-  function startGame(){
+  function startGame() {
     const index = Math.floor(Math.random() * WORDS.length)
     const randomWord = WORDS[index]
 
     setChallenge(randomWord)
-    setAttempt(0)
+    setScore(0)
     setLetter("")
+    setLettersUsed([])
   }
 
-  function handleConfirm(){
-    if (!challenge){
+  function handleConfirm() {
+    if (!challenge) {
       return
     }
 
-    if(!letter.trim()){
+    if (!letter.trim()) {
       return alert("Digite uma letra.")
     }
 
     const value = letter.toUpperCase()
-    const exists = lettersUsed.find((used) => used.value.toLocaleUpperCase() === value)
+    const exists = lettersUsed.find(
+      (used) => used.value.toLocaleUpperCase() === value
+    )
 
-    if(exists){
-      return alert ("Você já utilizou a letra " + value)
+    if (exists) {
+      setLetter("")
+      return alert("Você já utilizou a letra " + value)
     }
 
-    setLettersUsed((prevState) => [...prevState, {value, correct: false}])
-    setLetter("")
+    const hits = challenge.word
+      .toUpperCase()
+      .split("")
+      .filter((char) => char === value).length
 
+    const correct = hits > 0 
+    const currentScore = score + hits
+
+
+    setLettersUsed((prevState) => [...prevState, { value, correct }])
+    setScore(currentScore)
+    setLetter("")
   }
 
-  useEffect( () => {
+  function endGame(message: string){
+    alert(message)
+    startGame()
+  }
+
+  useEffect(() => {
     startGame()
   }, [])
 
-  if(!challenge){
+  useEffect(() => {
+    if(!challenge){
+      return
+    }
+    setTimeout(() => {
+      if(score === challenge.word.length){
+        return endGame("Parabéns, você descobriu a palavra.")
+      } 
+
+      const attemptLimit = challenge.word.length + ATTEMPT_MARGIN
+      if (lettersUsed.length === attemptLimit){
+        return endGame("Que pena, você usou todas as tentativas!")
+      }
+
+    }, 200);
+  }, [score, lettersUsed.length])
+
+  if (!challenge) {
     return
   }
 
   return (
     <div className={styles.container}>
       <main>
-        <Header current={attempts} max={10} onRestart={handleRestarGame} />
+        <Header current={lettersUsed.length} max={challenge.word.length + ATTEMPT_MARGIN} onRestart={handleRestarGame} />
 
-        <Tip tip="Linguagem de programação dinâmica" />
+        <Tip tip={challenge.tip} />
 
         <div className={styles.word}>
-          {
-            challenge.word.split("").map(() => (
-              <Letter value="" />
-            ))
-          }
+          {challenge.word.split("").map((letter, index) => {
+            const letterUsed = lettersUsed.find((used) => used.value.toUpperCase() === letter.toUpperCase())
+            
+            return <Letter key={index} value={letterUsed?.value} color={letterUsed?.correct ? "correct" : "default"} />
+          })}
         </div>
 
         <h4>Palpite</h4>
 
         <div className={styles.guess}>
-          <Input autoFocus maxLength={1} placeholder="?" value={letter} onChange={(e) => setLetter(e.target.value)}/>
-          <Button title="Confirmar" onClick={handleConfirm}/>
+          <Input
+            autoFocus
+            maxLength={1}
+            placeholder="?"
+            value={letter}
+            onChange={(e) => setLetter(e.target.value)}
+          />
+          <Button title="Confirmar" onClick={handleConfirm} />
         </div>
 
-        <LettersUsed data={lettersUsed}/>
+        <LettersUsed data={lettersUsed} />
       </main>
     </div>
   )
