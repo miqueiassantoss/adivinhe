@@ -1,73 +1,76 @@
-# React + TypeScript + Vite
+<h1 align="center"> Adivinhe - Jogo de Palavras </h1>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<p align="center">
+  Um jogo interativo de adivinhação de palavras focado em tecnologias Web, desenvolvido para introdução aos conceitos do React.
+</p>
 
-Currently, two official plugins are available:
+<p align="center">
+  <a href="#-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-projeto">Projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-como-rodar">Como Rodar</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#memo-licença">Licença</a>
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<p align="center">
+  <img alt="License" src="https://img.shields.io/static/v1?label=license&message=MIT&color=49AA26&labelColor=000000">
+</p>
 
-## React Compiler
+<br>
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+<p align="center">
+  <img alt="Capa do Projeto" src="./.github/capa.png" width="500px%" height="400px">
+</p>
 
-## Expanding the ESLint configuration
+## 🚀 Tecnologias
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Esse projeto foi o meu primeiro contato com o ecossistema React, utilizando:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **[React](https://reactjs.org/)** (Componentização e Hooks)
+- **[TypeScript](https://www.typescriptlang.org/)** (Tipagem estática de Props e Estados)
+- **CSS Modules** (Estilização escopada para evitar conflitos)
+- **Vite** (Build tool rápida)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 💻 Projeto
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+O **Adivinhe** é um jogo onde o usuário deve descobrir qual é a tecnologia baseada em uma dica apresentada na tela.
+O objetivo técnico foi praticar a passagem de propriedades (**Props**) entre componentes e o gerenciamento de estado (**useState**) para controlar o fluxo do jogo.
+
+Mecânica do jogo:
+- O sistema escolhe aleatoriamente uma palavra de um banco de dados local (`utils/words.ts`).
+- Uma dica é exibida (ex: "Linguagem de estilos" para "CSS").
+- O jogador tem um número limitado de tentativas para acertar.
+- A interface exibe o progresso (ex: "1 de 3 tentativas") e permite reiniciar a partida a qualquer momento.
+
+## 📂 Estrutura
+
+O código foi organizado em componentes funcionais para facilitar a manutenção:
+- `Header`: Exibe o logo, o contador de tentativas e o botão de reset.
+- `Button` & `Input`: Componentes reutilizáveis estilizados via CSS Modules.
+- `Utils`: Separação dos dados (array de palavras) da lógica de interface.
+
+## 🎲 Como Rodar
+
+```bash
+# Clone este repositório
+$ git clone [https://github.com/miqueiassantoss/adivinhe.git](https://github.com/miqueiassantoss/adivinhe.git)
+
+# Acesse a pasta do projeto
+$ cd adivinhe
+
+# Instale as dependências
+$ npm install
+
+# Execute a aplicação
+$ npm run dev
+
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📝 Licença
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Esse projeto está sob a licença MIT.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+<p align="center">
+  Feito por <a href="https://github.com/miqueiassantoss">Miqueias Santos</a>
+</p>
